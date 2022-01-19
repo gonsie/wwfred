@@ -173,6 +173,16 @@ def guess_brute_force(words):
         return guess_max_score2(words)
 
 
+def guess_noily(words):
+    if len(words) == len(all_words):
+        guess_noily.round1= True
+        return 'TARES'
+    elif guess_noily.round1:
+        guess_noily.round1= False
+        return 'NOILY'
+    else:
+        return guess_max_score2(words)
+
 def guess_long_tail(words):
     if len(words) > 26:
         return guess_max_score2(words)
@@ -245,17 +255,28 @@ def guess_and_check(strat_f,words,answer):
         return True
 
 def run_game(strat_f, words, answer):
-    rounds = 1
+    rounds = 0
     global alternate_words
     alternate_words = all_words.copy()
     while True:
+        rounds += 1
         if guess_and_check(strat_f,words, answer):
             print("WINNER in %d rounds" % rounds)
             return rounds
+
+def i_human_guess(strat_f, words,answer):
+    rounds = 0
+    while True:
         rounds += 1
+        g = input("Guess: ")
+        if guess_and_check(lambda _:g.upper(), words,answer):
+            print("WINNER in %d rounds" % rounds)
+            return rounds
+        if len(words) < 20:
+            print(words)
+            print(max(words,key=words.get))
 
-
-def interactive(strat_f,words,answer):
+def i_comp_guess(strat_f,words,answer):
     rounds = 0
     while True:
         rounds += 1
